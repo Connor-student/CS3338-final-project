@@ -1,0 +1,98 @@
+\documentclass[12pt]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+% --- Setup ---
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=cyan}
+
+\begin{document}
+
+% --- i. Cover Page ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{Software Requirement Specification}} \\
+    \vspace{0.5cm}
+    {\Large \textbf{JPL Lunar Detection Pipeline}} \\
+    \vfill
+    \textbf{Version:} 1.1 \\
+    \textbf{Prepared by:} \\
+     Ricky Chao, George Malanche, Kevin Mendoza, Connor Moy \\
+    \vspace{1cm}
+    \textbf{Sponsored by:} NASA JPL \\
+    \textbf{Date:} May 14, 2026
+\end{titlepage}
+
+% --- ii. Table of Contents ---
+\newpage
+\tableofcontents
+\newpage
+
+% --- iii. Versions Table ---
+\section*{Revision History}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Revision} & \textbf{Date} & \textbf{Author} & \textbf{Description} \\ \hline
+1.0 & 2026-05-04 & Project Team & Initial SRS Draft \\ \hline
+1.1 & 2026-05-13 & Project Team & Update Sections 1.1 - 4 \\ \hline
+\end{tabularx}
+
+% --- iv. Sections ---
+
+% 1. Introduction
+\section{Introduction}
+\subsection{Purpose}
+The purpose of this SRS is to define the functional and non-functional requirements for the JPL Lunar Detection Pipeline. This uses an automated system for the identification and labeling of lunar surface features (craters, rocks, pits) to assist NASA scientists.
+
+\subsection{Intended Audience}
+This document is intended for NASA JPL stakeholders, project developers, and the verification/validation team.
+
+\subsection{Overview}
+The pipeline ingests raw LROC imagery, processes it through machine learning models (YOLO and Detectron2), and outputs geolocated data compatible with planetary mapping standards.
+
+% 2. External Interface Requirements
+\section{External Interface Requirements}
+\subsection{User Interface}
+The system will provide a Command Line Interface (CLI) for batch processing and a set of API endpoints for integration into existing JPL workflows. There is no requirement for a high-fidelity Graphical User Interface in this version.
+
+\subsection{Software Interfaces}
+\begin{itemize}
+    \item \textbf{NASA PDS4:} Interface for retrieving raw planetary data and XML labels.
+    \item \textbf{SPICE Toolkit:} Used for transforming image pixel coordinates into lunar geographic coordinates (Latitude/Longitude).
+    \item \textbf{AWS S3:} Future interface for cloud-based storage of training datasets and model weights.
+\end{itemize}
+
+% 3. Legal and Ethical Considerations
+\section{Legal and Ethical Considerations}
+\subsection{User Data \& Storing}
+The system primarily processes public-domain planetary data from NASA. However, any user-contributed labels or metadata stored in the pipeline must be handled according to NASA security protocols to ensure data integrity and prevent unauthorized modification.
+
+\subsection{Legal Compliance}
+All software components must adhere to open-source licensing (e.g., Apache 2.0 or MIT) to ensure the pipeline can be maintained and shared within the scientific community without proprietary restrictions.
+
+\subsection{Ethical Dilemmas}
+\begin{itemize}
+    \item \textbf{Scientific Accuracy:} There is an ethical responsibility to ensure high precision in detections. False positives in crater labeling could lead to incorrect scientific conclusions regarding lunar age or landing site safety.
+    \item \textbf{Data Provenance:} All processed images must maintain metadata linking them back to the original LROC source to ensure reproducibility in scientific research.
+\end{itemize}
+
+% --- v. Glossary ---
+\newpage
+\section{Glossary}
+\begin{tabularx}{\textwidth}{l|X}
+\toprule
+\textbf{Acronym} & \textbf{Definition} \\ \midrule
+LROC & Lunar Reconnaissance Orbiter Camera. \\
+PDS4 & Planetary Data System 4; NASA's standard for planetary data labels. \\
+SPICE & Spacecraft Planet Instrument C-matrix Events; NASA navigation toolkit. \\
+YOLO & You Only Look Once; a real-time object detection model. \\ \bottomrule
+\end{tabularx}
+
+\end{document}

@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% --- Hyperref Setup ---
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=cyan}
+
+\begin{document}
+
+% --- i. Cover Page ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{Software Design Document}} \\
+    \vspace{0.5cm}
+    {\Large \textbf{JPL Lunar Detection Pipeline}} \\
+    \vfill
+    \textbf{Version:} 1.1 \\
+    \textbf{Prepared by:} \\
+     Ricky Chao, George Malanche, Kevin Mendoza, Connor Moy \\
+    \vspace{1cm}
+    \textbf{Sponsored by:} NASA JPL \\
+    \textbf{Date:} May 14, 2026
+\end{titlepage}
+
+% --- ii. Table of Contents ---
+\newpage
+\tableofcontents
+\newpage
+
+% --- iii. Versions Table ---
+\section*{Revision History}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Version} & \textbf{Date} & \textbf{Author} & \textbf{Reason For Changes} \\ \hline
+1.0 & 2026-05-04 & Project Team & Initial SDD Draft \\ \hline
+1.1 & 2026-05-13 & Project Team & Update Sections 1.1 - 5 \\ \hline\hline
+\end{tabularx}
+
+% --- iv. Sections ---
+
+% 1. Introduction
+\section{Introduction}
+\subsection{Purpose}
+This document translates the requirements defined in the SRS into a technical blueprint. It focuses on \textit{how} the system will achieve its goals, detailing design decisions, architectural diagrams, and component-level specifications.
+
+\subsection{Intended Audience}
+This document is designed for developers, ML engineers, project managers, and future maintenance teams to guide implementation and validation.
+
+\subsection{Overview}
+The system automates the process of labeling lunar topographical features (craters, rocks, pits) using machine learning models YOLOv11 and Detectron2. Then it generates bounding boxes with labels describing the surface features.
+
+% 2. System Architecture
+\section{System Architecture}
+\subsection{Workflow}
+The architecture is modular, organized into six phases:
+\begin{itemize}
+    \item \textbf{Phase 0 (Acquire):} Downloads PDS4 products from NASA archives.
+    \item \textbf{Phase 1 (Imaging):} Converts .IMG products to GeoTIFF/PNG tiles.
+    \item \textbf{Phase 2 (Annotation):} Converts XML to COCO/YOLO formats.
+    \item \textbf{Phases 3 \& 4 (Training):} Trains and evaluates YOLOv11 and Detectron2 models.
+    \item \textbf{Phase 5 (Inference):} Runs detection and generates geolocated predictions.
+\end{itemize}
+
+\subsection{Site Breakdown (Key Modules)}
+\begin{tabularx}{\textwidth}{l|X}
+\toprule
+\textbf{Module} & \textbf{Responsibility} \\ \midrule
+Data Ingestion & Validates raw NASA LROC imagery and extracts metadata. \\
+Preprocessing & Handles image tiling (1024x1024) and dataset splitting. \\
+Detection Engine & Identifies features using YOLOv11 and Detectron2 pathways. \\
+Geolocation Service & Maps pixel coordinates to lunar Lat/Lon using SPICE kernels. \\
+\bottomrule
+\end{tabularx}
+
+% 3. User Interface
+\section{User Interface}
+\subsection{How to Use}
+The system is operated through a Python-based Command-Line Interface (CLI) or the public API. Interaction follows a batch-processing workflow rather than an interactive graphical interface.
+
+\subsection{Database Explanation}
+The current system does not implement a persistent database. All processing occurs on transient data in memory or local files under \texttt{data/}. Future iterations will integrate AWS S3 for versioning and archival of training datasets.
+
+% --- v. Glossary ---
+\section{Glossary}
+\begin{tabularx}{\textwidth}{l|X}
+\toprule
+\textbf{Term} & \textbf{Definition} \\ \midrule
+AWS & Amazon Web Services; cloud platform for future storage. \\
+COCO & Common Objects in Context; standard data format for object detection. \\
+LROC & Lunar Reconnaissance Orbiter Camera. \\
+PDS4 & Planetary Data System 4; NASA's standardized data format. \\
+SPICE & NASA toolkit for coordinate transformation and ephemeris data. \\
+\bottomrule
+\end{tabularx}
+
+% --- vi. References ---
+\section{References}
+\begin{itemize}
+    \item Software Requirements Specification (SRS) Document.
+    \item JPL Lunar Reconnaissance Orbiter Camera PDS Archive.
+\end{itemize}
+
+\end{document}
