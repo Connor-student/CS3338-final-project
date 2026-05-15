@@ -1,0 +1,437 @@
+\documentclass[12pt]{article}
+
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\title{JPL Lunar Detection Pipeline\\Packages, Dependencies, and Libraries Design Specification}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+% =========================================================
+\section{Project Overview}
+
+The JPL Lunar Detection Pipeline is a machine learning and computer vision
+project designed to analyze lunar imagery using object detection and
+instance segmentation models. This document focuses specifically on the
+packages, dependencies, libraries, and Docker requirements needed to run
+the project.
+
+% =========================================================
+\section{Programming Language}
+
+\begin{itemize}
+    \item Python 3.11
+\end{itemize}
+
+Python is the primary programming language used for:
+\begin{itemize}
+    \item Backend development
+    \item Machine learning inference
+    \item Image processing
+    \item Data export
+    \item API creation
+\end{itemize}
+
+% =========================================================
+\section{Core Machine Learning Libraries}
+
+\subsection{PyTorch}
+
+\textbf{Library Name:}
+\begin{verbatim}
+torch
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Main deep learning framework
+    \item Runs neural network models
+    \item GPU acceleration support
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{TorchVision}
+
+\textbf{Library Name:}
+\begin{verbatim}
+torchvision
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Computer vision utilities for PyTorch
+    \item Image transforms
+    \item Dataset support
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Ultralytics YOLO}
+
+\textbf{Library Name:}
+\begin{verbatim}
+ultralytics
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Object detection
+    \item Bounding box prediction
+    \item Real-time feature detection
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Detectron2}
+
+\textbf{Library Name:}
+\begin{verbatim}
+detectron2
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Instance segmentation
+    \item Mask generation
+    \item Object outlining
+\end{itemize}
+
+% =========================================================
+\section{Image Processing Libraries}
+
+\subsection{OpenCV}
+
+\textbf{Library Name:}
+\begin{verbatim}
+opencv-python
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Image resizing
+    \item Image normalization
+    \item Image filtering
+    \item Drawing annotations
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Pillow}
+
+\textbf{Library Name:}
+\begin{verbatim}
+pillow
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Reading image files
+    \item Converting image formats
+    \item Basic image manipulation
+\end{itemize}
+
+% =========================================================
+\section{Data Processing Libraries}
+
+\subsection{NumPy}
+
+\textbf{Library Name:}
+\begin{verbatim}
+numpy
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Numerical operations
+    \item Matrix operations
+    \item Image array processing
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Pandas}
+
+\textbf{Library Name:}
+\begin{verbatim}
+pandas
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item CSV generation
+    \item Metadata organization
+    \item Table management
+\end{itemize}
+
+% =========================================================
+\section{Visualization Libraries}
+
+\subsection{Matplotlib}
+
+\textbf{Library Name:}
+\begin{verbatim}
+matplotlib
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Performance graphs
+    \item Metrics visualization
+    \item Plot generation
+\end{itemize}
+
+% =========================================================
+\section{Evaluation Libraries}
+
+\subsection{Scikit-learn}
+
+\textbf{Library Name:}
+\begin{verbatim}
+scikit-learn
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Precision calculation
+    \item Recall calculation
+    \item F1-score metrics
+    \item Evaluation utilities
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{SciPy}
+
+\textbf{Library Name:}
+\begin{verbatim}
+scipy
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Scientific computing
+    \item Mathematical utilities
+    \item Numerical optimization
+\end{itemize}
+
+% =========================================================
+\section{Backend and API Libraries}
+
+\subsection{FastAPI}
+
+\textbf{Library Name:}
+\begin{verbatim}
+fastapi
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Backend API framework
+    \item Route handling
+    \item Upload endpoints
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Uvicorn}
+
+\textbf{Library Name:}
+\begin{verbatim}
+uvicorn
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item ASGI server
+    \item Runs FastAPI application
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Python Multipart}
+
+\textbf{Library Name:}
+\begin{verbatim}
+python-multipart
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Handles image uploads
+    \item Supports multipart form requests
+\end{itemize}
+
+% =========================================================
+\section{Utility Libraries}
+
+\subsection{PyYAML}
+
+\textbf{Library Name:}
+\begin{verbatim}
+pyyaml
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Reads configuration files
+    \item Stores model settings
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{tqdm}
+
+\textbf{Library Name:}
+\begin{verbatim}
+tqdm
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Progress bars
+    \item Displays processing status
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Requests}
+
+\textbf{Library Name:}
+\begin{verbatim}
+requests
+\end{verbatim}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item API requests
+    \item External file downloads
+\end{itemize}
+
+% =========================================================
+\section{Python Package Installation List}
+
+The following packages are required in the Docker container.
+
+\begin{verbatim}
+fastapi
+uvicorn
+python-multipart
+torch
+torchvision
+ultralytics
+detectron2
+opencv-python
+pillow
+numpy
+pandas
+matplotlib
+scikit-learn
+scipy
+pyyaml
+tqdm
+requests
+\end{verbatim}
+
+% =========================================================
+\section{System Dependencies Required in Docker}
+
+The Docker container must include the following system-level dependencies.
+
+\begin{verbatim}
+python3
+python3-pip
+git
+wget
+curl
+build-essential
+cmake
+ffmpeg
+libsm6
+libxext6
+libgl1
+libglib2.0-0
+\end{verbatim}
+
+% =========================================================
+\section{Docker Requirements}
+
+\subsection{Docker}
+
+\textbf{Purpose:}
+\begin{itemize}
+    \item Containerizes the application
+    \item Creates a consistent runtime environment
+    \item Simplifies deployment
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Dockerfile}
+
+Example Docker configuration:
+
+\begin{verbatim}
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    git \
+    wget \
+    curl \
+    build-essential \
+    cmake \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+\end{verbatim}
+
+% =========================================================
+\section{requirements.txt}
+
+\begin{verbatim}
+fastapi
+uvicorn
+python-multipart
+torch
+torchvision
+ultralytics
+detectron2
+opencv-python
+pillow
+numpy
+pandas
+matplotlib
+scikit-learn
+scipy
+pyyaml
+tqdm
+requests
+\end{verbatim}
+
+% =========================================================
+\section{Conclusion}
+
+The JPL Lunar Detection Pipeline depends on multiple machine learning,
+computer vision, backend, and utility libraries to function correctly.
+These packages and dependencies are required to run the application,
+process lunar imagery, perform object detection and segmentation,
+generate results, and support Docker deployment.
+
+\end{document}
