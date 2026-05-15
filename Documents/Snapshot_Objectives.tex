@@ -1,0 +1,53 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{Snap Shot objectives}} \\
+    \vspace{0.5cm}
+    {\Large \textbf{JPL Lunar Detection Pipeline}} \\
+    \vfill
+    \textbf{Prepared by:} \\
+     Ricky Chao, George Malanche, Kevin Mendoza, Connor Moy \\
+    \vspace{1cm}
+    \textbf{Sponsored by:} NASA JPL \\
+    \textbf{Date:} May 15, 2026
+\end{titlepage}
+
+\section*{Start Objective}
+The starting objective of the JPL Lunar Detection Pipeline is to establish the core software infrastructure and data ingestion capabilities necessary for high-resolution lunar surface feature analysis. This includes the following key components:
+
+\begin{itemize}
+    \item \textbf{Data Ingestion Setup:} Establishing Phase 0 mechanisms for downloading LROC NAC products (.IMG and PDS4 .xml pairs) from the NASA PDS archive.
+    \item \textbf{Preprocessing Framework:} Implementing Phase 1 imaging to convert raw products into analysis-ready GeoTIFF/PNG tiles.
+    \item \textbf{SPICE Integration:} Configuring the NASA SPICE toolkit for initial camera geometry.
+\end{itemize}
+
+\section*{1st Checkpoint Objective}
+The primary objective for Snapshot 2 is to implement the end-to-end annotation conversion and initial model training pipeline. This involves developing functional scripts for Phase 2 (annotation) and Phase 3 (train-yolo), including:
+\begin{itemize}
+    \item Converting PASCAL VOC XML annotations into standardized COCO and YOLO formats.
+    \item Implementing dataset splitting (train/val/test) with reproducible shuffling.
+    \item Executing baseline training runs on YOLOv11 to verify model convergence and basic feature identification.
+\end{itemize}
+
+\section*{2nd Checkpoint Objective}
+The primary objective for Snapshot 3 is to integrate advanced detection engines and high-precision geolocation services. This phase focuses on the implementation of:
+\begin{itemize}
+    \item \textbf{Detectron2 Pipeline (Phase 4):} Training Mask R-CNN architectures to provide a high-accuracy detection alternative to the YOLO model.
+    \item \textbf{Precision Geolocation (Phase 5):} Refining ray-tracing computations to map detections to precise lunar latitude and longitude coordinates.
+\end{itemize}
+
+\section*{Due Date Checkpoint}
+The primary objective for the Due Date Checkpoint is to finalize the integrated pipeline and ensure full requirements validation. Final efforts will focus on:
+\begin{itemize}
+    \item \textbf{Error Handling and Logging:} Finalizing the Phase 5 inference engine with robust error reporting and rollback mechanisms for failed processing batches.
+    \item \textbf{Analysis and Visualization:} Completing the visualization exporter to overlay geolocated bounding boxes on original lunar imagery.
+    \item \textbf{Documentation and Verification:} Conducting end-to-end system testing to ensure the pipeline meets performance targets, such as achieving at least 90\% accuracy for crater detection.
+\end{itemize}
+
+\end{document}
