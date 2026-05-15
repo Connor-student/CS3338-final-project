@@ -1,0 +1,184 @@
+
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{JPL Lunar Detection Pipeline \\ ReadMe}
+\author{CS 3338 Group 10}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Project Overview}
+
+The \textbf{JPL Lunar Detection Pipeline} is NASA's Lunar Reconnaissance Orbiter Camera (LROC) captures high-resolution imagery of the lunar surface, generating vast quantities of data that require analysis to identify scientifically significant geological features. Manual review of this imagery is time-intensive and limits the pace at which researchers can survey the Moon for features of interest such as craters, boulders, slopes, and other formations critical to understanding lunar geology and planning future exploration missions. Automated feature detection addresses this bottleneck by enabling rapid, systematic analysis of LROC imagery, allowing scientists to focus their expertise on interpreting results rather than initial identification tasks.
+
+
+\section{Objectives}
+
+The machine learning pipeline processes raw LROC imagery through preprocessing stages that normalize image data and prepare it for model inference. YOLOv11 and Detectron2 models execute feature detection, generating bounding boxes, classification labels, and confidence scores for identified objects. The pipeline handles NASA's specialized image formats and accommodates the unique challenges of lunar imagery such as varying illumination angles, shadowing effects, and complex terrain topology. Post-processing stages filter results based on confidence thresholds and eliminate duplicate detections. The output includes annotated imagery with detected features highlighted, CSV files containing feature metadata (coordinates, dimensions, classifications), and performance metrics for model evaluation. This automated workflow significantly accelerates the analysis process compared to manual methods, enabling systematic surveys of large lunar regions and rapid identification of areas warranting further investigation for mission planning or scientific study.
+
+
+\section{Project Goals and Motivation}
+
+\subsection{Why This Project Is Needed}
+
+Modern lunar missions and research programs generate massive quantities of image data. Manual inspection of these datasets is time-consuming, expensive, and prone to inconsistency. 
+
+The JPL Lunar Detection Pipeline addresses these challenges by:
+\begin{itemize}
+    \item Increasing processing speed
+    \item Improving detection relabilty
+    \item Supporting large scientific workflows
+    \item Creating a data management and reporting system
+\end{itemize}
+
+\subsection{Key Goals}
+
+\begin{itemize}
+    \item Improve efficiency in lunar object analysis and processing 
+    \item To implement machine learning workflows
+    \item Provide controls for collaborative research
+    \item Support the growing planetary image analysis 
+    \item Making a simple dashboard that give users stress free movement in the system
+\end{itemize}
+
+Features include:
+\begin{itemize}
+    \item A dashboard that will show project management 
+    \item A area for data upload and check is its acceptable
+    \item Pipeline settings
+    \item Status checking
+    \item Showing results reports
+\end{itemize}
+
+\subsection{Processing Layer}
+\begin{itemize}
+    \item Data gathering and analyze
+    \item Image processing
+    \item Machine learning capabilties
+    \item Results gathering and projection
+\end{itemize}
+
+\subsection{Data and Storage Layer}
+Stores:
+\begin{itemize}
+    \item Raw imagery
+    \item Metadata
+    \item Processed outputs
+    \item Audit logs
+    \item Reports and artifacts
+\end{itemize}
+
+\section{Repository Information}
+
+
+\subsection{Jira Project Link}
+
+\begin{center}
+\url{https://cs3338-02-group-10.atlassian.net/jira/software/projects/CFPK/list/?filter=allissues&jql=project+%3D+%22CFPK%22+ORDER+BY+created+DESC&atlOrigin=eyJpIjoiNDFmN2VjYTFhZDdmNDY4MTg2ZjFlMTA3YTUyZWRkMDQiLCJwIjoiaiJ9}
+\end{center}
+
+\section{Installation and Setup}
+
+\subsection{System Requirements}
+
+\begin{itemize}
+    \item YOLOv11
+    \item Detectron2 (Mask R-CNN)
+    \item PyTorch
+    \item Python 3.10+
+    \item Git
+    \item Docker (optional)
+    \item Linux, macOS, or Windows
+\end{itemize}
+
+\subsection{Clone the Repository}
+
+\begin{verbatim}
+git clone https://github.com/Connor-student/CS3338-final-project
+\end{verbatim}
+
+\subsection{Create a Virtual Environment}
+
+\begin{verbatim}
+python -m venv venv
+\end{verbatim}
+
+Activate environment:
+
+\begin{verbatim}
+# Windows
+venv\Scripts\activate
+
+# Linux / macOS
+source venv/bin/activate
+\end{verbatim}
+
+\subsection{Install Dependencies}
+
+\begin{verbatim}
+pip install -r requirements.txt
+\end{verbatim}
+
+\subsection{Run the Application}
+
+\begin{verbatim}
+python app.py
+\end{verbatim}
+
+\section{How can users access the system}
+
+\begin{enumerate}
+    \item Open the web application in a browser.
+    \item Authenticate using organizational credentials.
+    \item Upload lunar image datasets or metadata.
+    \item Configure processing settings.
+    \item Start the lunar detection pipeline.
+    \item Monitor processing progress in real time.
+    \item Review and export generated results.
+\end{enumerate}
+
+
+\subsection{Access Roles}
+
+
+Administrator have full system access and configuration.
+
+Data Scientists  or Analysts can run pipelines and analyze results.
+
+Viewers or Collaborators can view reports and limited datasets 
+
+\section{Pipeline Workflow Summary}
+
+\begin{enumerate}
+    \item User can upload the image data
+    \item The System will check the incoming data for any errors
+    \item The System will preprocess the data
+    \item Detection system will analyze the data
+    \item Results will be safely stored 
+    \item Reports are generated for export
+\end{enumerate}
+
+
+\section{Group10}
+
+\begin{itemize}
+    \item Connor Moy
+    \item Kevin Mendoza
+    \item George Malanche
+    \item Ricky Chao
+\end{itemize}
+
+\section{Reference}
+This is the link to Ascent JPL Lunar Detection Pipeline project info.
+
+\url{https://ascent.cysun.org/project/project/view/239}
+
+
+\end{document}
