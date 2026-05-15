@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Core Pipeline Service (CLI & API)
+  # This handles Phase 0 (Acquisition) through Phase 5 (Inference)
+  lunar-pipeline:
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    container_name: jpl-lunar-detection-core
+    volumes:
+      - .:/app
+      - ./data:/app/data             # Persistent storage for LROC imagery and tiles
+      - ./models:/app/models         # Storage for YOLOv11 and Detectron2 weights
+      - ./spice_kernels:/app/spice   # Required for NASA SPICE toolkit geolocation
+    working_dir: /app
+    # The system is CLI-based; this keeps the container open for commands
+    command: tail -f /dev/null 
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu] # Required for 10-15s inference performance
+    networks:
+      - pipeline-network
+
+  # Visualization Service (Jupyter)
+  # Used for Phase 5 result viewing and QA via comparison notebooks
+  analysis-ui:
+    image: jupyter/datascience-notebook:python-3.11
+    container_name: jpl-lunar-analysis-ui
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/work/data
+    ports:
+      - "8888:8888" # Access view_pipeline_results.ipynb here
+    depends_on:
+      - lunar-pipeline
+    networks:
+      - pipeline-network
+
+networks:
+  pipeline-network:
+    driver: bridge
+
+volumes:
+  data:
+  models:
