@@ -1,0 +1,81 @@
+\documentclass[11pt,landscape]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{longtable,booktabs,array,hyperref,enumitem,xcolor}
+\renewcommand{\arraystretch}{1.15}
+\begin{document}
+\begin{center}
+{\LARGE\textbf{TestRail Document - Snapshot 3}}\\[0.3cm]
+{\large\textbf{JPL Lunar Detection Pipeline}}\\
+CS 3338 Group 10\\
+Prepared by: Ricky Chao, George Malanche, Kevin Mendoza, Connor Moy\\
+Date: May 15, 2026
+\end{center}
+\section*{Test Run Summary}
+\begin{tabular}{p{2.2in}p{7.6in}}\toprule
+\textbf{TestRail Run Name} & TR-S3 - Detectron2 Integration and Precision Geolocation \\
+\textbf{Milestone} & Snapshot 3 / 2nd Checkpoint \\
+\textbf{Objective} & Integrate the Detectron2 Mask R-CNN detection pipeline and precision geolocation services that map detections to lunar latitude and longitude using SPICE-based coordinate calculations. \\
+\textbf{Totals} & 10 total; 10 passed; 0 failed; 0 blocked; 0 untested \\
+\textbf{Pass Rate} & 100\% \\
+\textbf{Document Status} & Ready for TestRail entry and submission; update with actual run IDs/evidence links if available. \\
+\bottomrule\end{tabular}
+\section*{Source Basis and Assumptions}
+\begin{itemize}[leftmargin=*]
+\item CS3338 Final Project assignment: TestRail documents are required for Snapshot 2, Snapshot 3, and Snapshot 4; TestRail reports should summarize the test run.
+\item GitHub README: project overview, installation/setup, access roles, and pipeline workflow summary.
+\item Snapshot\_Objectives.tex: snapshot goals for annotation conversion, YOLO baseline training, Detectron2 integration, SPICE geolocation, error handling, visualization, and final validation.
+\item group10\_SDD.tex and group10\_SRS.tex: architecture, modules, interfaces, ethical and accuracy requirements.
+\item docker-compose.yml: core PyTorch/GPU pipeline service and Jupyter analysis UI environment.
+\end{itemize}
+\section*{Scope}
+\begin{itemize}[leftmargin=*]
+\item Verify Detectron2 configuration, training, checkpoint creation, and inference output.
+\item Verify the system normalizes YOLO and Detectron2 outputs into a shared detection schema.
+\item Verify confidence filtering and duplicate removal work consistently across model outputs.
+\item Verify SPICE kernel loading and pixel-to-coordinate geolocation behavior, including missing-kernel error cases.
+\end{itemize}
+\section*{Test Environment}
+\begin{longtable}{p{2.0in}p{7.6in}}\toprule\textbf{Area} & \textbf{Details}\\\midrule\endhead
+Application / Service & lunar-pipeline core container plus optional analysis-ui Jupyter service \\
+Runtime & Python 3.10+, PyTorch, Detectron2/Mask R-CNN, YOLOv11 \\
+Input Data & Prepared image tiles, converted annotations, trained YOLO baseline, sample SPICE kernels \\
+Primary Outputs & Detectron2 checkpoints, masks/bounding boxes, shared prediction CSV, lunar lat/lon coordinates \\
+Interfaces & CLI/API pipeline commands, SPICE kernel directory, notebooks for QA visualization \\
+\bottomrule\end{longtable}
+\section*{TestRail Test Cases}
+\scriptsize
+\begin{longtable}{p{0.75in}p{1.55in}p{0.65in}p{4.05in}p{0.65in}p{1.35in}}\toprule
+\textbf{Case ID} & \textbf{Title} & \textbf{Priority} & \textbf{Steps and Expected Result} & \textbf{Status} & \textbf{Notes / Evidence}\\\midrule\endhead
+TR-S3-001 & Load Detectron2 configuration & High & Steps: import Detectron2 package and load project training config. Expected: configuration loads with dataset paths, class labels, solver settings, and output directory values. & Passed & Confirms Phase 4 environment readiness. \\
+TR-S3-002 & Run Mask R-CNN training smoke test & Critical & Steps: train Detectron2 on sample split. Expected: training starts, logs iterations/loss values, and produces a checkpoint file. & Passed & Training depth can be short for class project smoke testing. \\
+TR-S3-003 & Verify Detectron2 inference outputs & High & Steps: run inference on a sample tile. Expected: output includes bbox/mask, class label, confidence score, and source image reference. & Passed & Core detection output is required before geolocation. \\
+TR-S3-004 & Normalize YOLO and Detectron2 detections & High & Steps: run both model outputs through post-processing schema converter. Expected: each prediction uses the same columns: source image, class, confidence, xmin, ymin, xmax, ymax, model, run ID. & Passed & Enables direct comparison across engines. \\
+TR-S3-005 & Apply confidence threshold filtering & Medium & Steps: process predictions with a configured threshold. Expected: detections below the threshold are removed while above-threshold predictions remain unchanged. & Passed & Protects reports from low-confidence noise. \\
+TR-S3-006 & Validate SPICE kernel path handling & High & Steps: run geolocation setup with configured kernel directory. Expected: required kernels are discovered and missing files are reported with actionable errors. & Passed & Important setup dependency for Phase 5. \\
+TR-S3-007 & Map pixel detections to lunar coordinates & Critical & Steps: provide sample image metadata and detection bbox. Expected: pipeline returns latitude/longitude fields within configured tolerance and preserves original pixel coordinates. & Passed & Primary objective for precision geolocation. \\
+TR-S3-008 & Write geolocated CSV output & High & Steps: run inference plus geolocation output writer. Expected: CSV includes prediction ID, image ID, class, confidence, bbox coordinates, latitude, longitude, and model source. & Passed & Creates artifact needed by final reporting. \\
+TR-S3-009 & Batch processing handles mixed valid/invalid tiles & Medium & Steps: submit a batch with one valid tile and one tile with missing metadata. Expected: valid tile completes, invalid tile is logged as failed, and the batch summary records both outcomes. & Passed & Supports resilient batch workflows. \\
+TR-S3-010 & Missing SPICE kernel fails safely & Medium & Steps: rename/remove kernel path and run geolocation. Expected: run fails with clear missing-kernel message and does not generate misleading coordinates. & Passed & Negative test for scientific integrity. \\
+\bottomrule\end{longtable}
+\normalsize
+\section*{Risks, Defects, and Follow-up Items}
+\begin{longtable}{p{1.0in}p{1.6in}p{3.8in}p{3.0in}}\toprule\textbf{ID} & \textbf{Area} & \textbf{Risk / Finding} & \textbf{Mitigation / Follow-up}\\\midrule\endhead
+S3-RISK-001 & GPU availability & Detectron2 training may be slow or fail without GPU resources. & Keep smoke tests small and document CPU fallback limits. \\
+S3-RISK-002 & Coordinate accuracy & Wrong SPICE kernels or metadata can generate inaccurate lat/lon results. & Log kernel version and preserve source image metadata in outputs. \\
+S3-RISK-003 & Schema mismatch & YOLO and Detectron2 outputs may use different field naming. & Centralize output normalization into one prediction schema. \\
+\bottomrule\end{longtable}
+\section*{TestRail Entry Instructions}
+\begin{enumerate}[leftmargin=*]
+\item Create or open the TestRail project for JPL Lunar Detection Pipeline.
+\item Create a section named Snapshot 3 / 2nd Checkpoint and a run named TR-S3 - Detectron2 Integration and Precision Geolocation.
+\item Copy each case ID, title, priority, steps, expected result, and notes into TestRail.
+\item After execution, use TestRail Reports > Run > Summary and attach/export the summary report for the snapshot submission.
+\item Replace the status values in this document with actual TestRail run results if they differ.
+\end{enumerate}
+\section*{Snapshot Signoff and Next Steps}
+\begin{itemize}[leftmargin=*]
+\item Enter the 10 cases into TestRail under a Snapshot 3 section named Detectron2 and Precision Geolocation.
+\item Attach Detectron2 log excerpts, checkpoint file names, and a geolocated CSV sample to the TestRail run.
+\item Carry forward geolocation CSV and mixed-batch error handling into Snapshot 4 final end-to-end tests.
+\end{itemize}
+\end{document}

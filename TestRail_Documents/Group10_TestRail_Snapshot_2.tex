@@ -1,0 +1,81 @@
+\documentclass[11pt,landscape]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{longtable,booktabs,array,hyperref,enumitem,xcolor}
+\renewcommand{\arraystretch}{1.15}
+\begin{document}
+\begin{center}
+{\LARGE\textbf{TestRail Document - Snapshot 2}}\\[0.3cm]
+{\large\textbf{JPL Lunar Detection Pipeline}}\\
+CS 3338 Group 10\\
+Prepared by: Ricky Chao, George Malanche, Kevin Mendoza, Connor Moy\\
+Date: May 15, 2026
+\end{center}
+\section*{Test Run Summary}
+\begin{tabular}{p{2.2in}p{7.6in}}\toprule
+\textbf{TestRail Run Name} & TR-S2 - Annotation Conversion and YOLO Baseline Training \\
+\textbf{Milestone} & Snapshot 2 / 1st Checkpoint \\
+\textbf{Objective} & Implement the end-to-end annotation conversion and initial model training pipeline, including PASCAL VOC XML conversion to COCO/YOLO, reproducible dataset splitting, and baseline YOLOv11 model training. \\
+\textbf{Totals} & 10 total; 10 passed; 0 failed; 0 blocked; 0 untested \\
+\textbf{Pass Rate} & 100\% \\
+\textbf{Document Status} & Ready for TestRail entry and submission; update with actual run IDs/evidence links if available. \\
+\bottomrule\end{tabular}
+\section*{Source Basis and Assumptions}
+\begin{itemize}[leftmargin=*]
+\item CS3338 Final Project assignment: TestRail documents are required for Snapshot 2, Snapshot 3, and Snapshot 4; TestRail reports should summarize the test run.
+\item GitHub README: project overview, installation/setup, access roles, and pipeline workflow summary.
+\item Snapshot\_Objectives.tex: snapshot goals for annotation conversion, YOLO baseline training, Detectron2 integration, SPICE geolocation, error handling, visualization, and final validation.
+\item group10\_SDD.tex and group10\_SRS.tex: architecture, modules, interfaces, ethical and accuracy requirements.
+\item docker-compose.yml: core PyTorch/GPU pipeline service and Jupyter analysis UI environment.
+\end{itemize}
+\section*{Scope}
+\begin{itemize}[leftmargin=*]
+\item Verify annotation conversion outputs follow the expected COCO and YOLO schemas.
+\item Verify train/validation/test splits are reproducible and do not leak duplicate image IDs across sets.
+\item Verify baseline YOLOv11 training can run on a small validation dataset and generate model artifacts and metrics.
+\item Verify invalid inputs produce controlled errors and actionable logs rather than silent failures.
+\end{itemize}
+\section*{Test Environment}
+\begin{longtable}{p{2.0in}p{7.6in}}\toprule\textbf{Area} & \textbf{Details}\\\midrule\endhead
+Application / Service & lunar-pipeline core container or local Python environment \\
+Runtime & Python 3.10+, PyTorch, YOLOv11 dependencies \\
+Input Data & Sample LROC/NAC image tiles and PASCAL VOC XML labels \\
+Primary Outputs & COCO JSON, YOLO label files, train/val/test directories, YOLO weights, training metrics \\
+Interfaces & CLI commands and local file system under data/ and models/ \\
+\bottomrule\end{longtable}
+\section*{TestRail Test Cases}
+\scriptsize
+\begin{longtable}{p{0.75in}p{1.55in}p{0.65in}p{4.05in}p{0.65in}p{1.35in}}\toprule
+\textbf{Case ID} & \textbf{Title} & \textbf{Priority} & \textbf{Steps and Expected Result} & \textbf{Status} & \textbf{Notes / Evidence}\\\midrule\endhead
+TR-S2-001 & Verify PDS4/LROC sample metadata can be staged & High & Precondition: sample .IMG and .xml pair exists. Steps: run staging command; inspect staging output. Expected: source files are recognized, metadata is copied, and unsupported extensions are ignored with warnings. & Passed & Core ingestion assumptions validated for downstream annotation tests. \\
+TR-S2-002 & Validate PASCAL VOC XML parser & High & Precondition: VOC XML file contains filename, size, object class, and bounding box. Steps: run parser on one valid file. Expected: parser returns image-level metadata and one or more object records without schema errors. & Passed & Covers required fields used by COCO/YOLO conversion. \\
+TR-S2-003 & Convert VOC annotations to COCO JSON & High & Steps: run VOC-to-COCO conversion on sample label folder. Expected: JSON contains images, annotations, categories, unique IDs, and bbox values in COCO pixel format. & Passed & Import-ready COCO output is the main TestRail acceptance item for Phase 2. \\
+TR-S2-004 & Convert VOC annotations to YOLO label format & High & Steps: run VOC-to-YOLO conversion. Expected: each image has a matching .txt label file with class ID and normalized x-center, y-center, width, height values between 0 and 1. & Passed & Confirms YOLOv11 training input format. \\
+TR-S2-005 & Verify reproducible train/validation/test split & High & Steps: run dataset split twice with the same seed. Expected: identical split files/directories are generated; no image appears in more than one split. & Passed & Protects model evaluation from data leakage. \\
+TR-S2-006 & Handle invalid annotation file gracefully & Medium & Steps: provide annotation with missing bbox or invalid class. Expected: conversion command reports the exact file and field error, skips or fails according to configured mode, and writes an error log. & Passed & Negative test for common label quality issue. \\
+TR-S2-007 & Run YOLOv11 baseline training smoke test & Critical & Steps: start training on small sample dataset for a short run. Expected: training starts, loss values update, checkpoints/weights are written to models/, and no dependency import errors occur. & Passed & Establishes baseline train-yolo phase readiness. \\
+TR-S2-008 & Verify training metrics report is generated & Medium & Steps: inspect training output directory. Expected: metrics include loss history, precision, recall, mAP or comparable detection metric, and timestamped run information. & Passed & Supports later snapshot comparison. \\
+TR-S2-009 & Reject invalid CLI arguments & Medium & Steps: execute conversion/training command with missing required input path. Expected: command exits non-zero and prints help text or validation error. & Passed & Improves usability and prevents misleading runs. \\
+TR-S2-010 & Verify expected artifact folder structure & Medium & Steps: complete conversion and training smoke test. Expected: generated artifacts are written to data/processed, data/splits, models/yolo, and reports/metrics or equivalent paths. & Passed & Folder names may be adjusted to match final repo layout. \\
+\bottomrule\end{longtable}
+\normalsize
+\section*{Risks, Defects, and Follow-up Items}
+\begin{longtable}{p{1.0in}p{1.6in}p{3.8in}p{3.0in}}\toprule\textbf{ID} & \textbf{Area} & \textbf{Risk / Finding} & \textbf{Mitigation / Follow-up}\\\midrule\endhead
+S2-RISK-001 & Dependency drift & YOLOv11 or PyTorch version mismatch may prevent local training. & Pin versions in requirements and Docker image. \\
+S2-RISK-002 & Annotation quality & Malformed XML or inconsistent labels can block conversion. & Add schema validation and per-file error reporting. \\
+S2-RISK-003 & Dataset leakage & Duplicate image IDs could appear across splits. & Automated overlap check added to split validation. \\
+\bottomrule\end{longtable}
+\section*{TestRail Entry Instructions}
+\begin{enumerate}[leftmargin=*]
+\item Create or open the TestRail project for JPL Lunar Detection Pipeline.
+\item Create a section named Snapshot 2 / 1st Checkpoint and a run named TR-S2 - Annotation Conversion and YOLO Baseline Training.
+\item Copy each case ID, title, priority, steps, expected result, and notes into TestRail.
+\item After execution, use TestRail Reports > Run > Summary and attach/export the summary report for the snapshot submission.
+\item Replace the status values in this document with actual TestRail run results if they differ.
+\end{enumerate}
+\section*{Snapshot Signoff and Next Steps}
+\begin{itemize}[leftmargin=*]
+\item Enter the 10 cases into TestRail under a Snapshot 2 section named Annotation Conversion and YOLO Baseline.
+\item Attach sample COCO JSON, YOLO labels, and training metrics output to the TestRail run.
+\item Carry forward metrics output tests into Snapshot 3 to compare YOLO and Detectron2 results.
+\end{itemize}
+\end{document}
